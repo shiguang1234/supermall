@@ -3,7 +3,7 @@
     <swiper>
       <swiper-item v-for="(item,index) in banners" :key="index"> <!-- v-for 绑定key -->
         <a :href="item.link"> <!-- 图片可点击，所以外包a标签 -->
-          <img :src="item.image" alt=""> <!-- 动态绑定属性src -->
+          <img :src="item.image" alt="" @load="imageLoad"> <!-- 动态绑定属性src -->
         </a>
       </swiper-item> <!-- v-for根据banners数组的长度确定插槽的个数 -->
     </swiper>
@@ -26,6 +26,19 @@
     components: {
       Swiper,
       SwiperItem,
+    },
+    data() {
+      return {
+        isLoad: false, //变量，用于记录状态，只需发一次事件
+      }
+    },
+    methods: {
+      imageLoad() {
+        if(!this.isLoad) {
+          this.$emit('swiperImageLoad'); //发送图片加载完成事件给Home.vue
+          this.isLoad = true;
+        }
+      }
     }
   }
 </script>
