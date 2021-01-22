@@ -11,11 +11,6 @@
                     class="tab-control"
                     v-show="isTabFixed"/>
 
-    <!-- <tab-control  :titles="['流行','新款','精选']"
-                    @tabClick="tabClick"
-                    ref="tabControl"
-                    /> -->
-
     <!-- 使用滚动组件 -->
     <scroll class="content" 
             ref="scroll" 

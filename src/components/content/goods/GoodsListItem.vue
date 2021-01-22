@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <img :src="goodsItem.show.img" alt="" @load="imageLoad"> <!-- 监听图片加载完成 -->
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>  <!-- 商品描述 -->
@@ -23,6 +23,16 @@
     methods: {
       imageLoad() {
         this.$bus.$emit('itemImageLoad'); //事件总线，发射事件
+      },
+      //监听item的点击，跳转到详情页
+      itemClick() {
+        this.$router.push('/detail/' + this.goodsItem.iid); //路由跳转，要返回，用push
+        // this.$router.push({ 
+        //   path: '/detail',
+        //   query: {
+
+        //   }
+        // }) //query方式传递参数,传一个对象
       }
     }
   }
