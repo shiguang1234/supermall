@@ -31,7 +31,10 @@
     },
     methods: {
       titleClick(index) {
+        //1.改变样式，点击后颜色改变
         this.currentIndex = index;
+        //2.联动效果
+        this.$emit('titleClick',index);
       },
       backClick() {
         this.$router.back();

@@ -1,6 +1,8 @@
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="goodsItem.show.img" alt="" @load="imageLoad"> <!-- 监听图片加载完成 -->
+    <!-- 监听图片加载完成 -->
+    <!-- <img :src="showImage" alt="" @load="imageLoad">  -->
+    <img v-lazy="showImage" alt="" @load="imageLoad"> 
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>  <!-- 商品描述 -->
       <span class="price">{{goodsItem.price}}</span>
@@ -20,9 +22,21 @@
         }
       }
     },
+    computed: {
+      showImage() {
+        return this.goodsItem.image || this.goodsItem.show.img; //计算属性，兼容详情页推荐数据展示、首页商品展示
+      }
+    },
     methods: {
       imageLoad() {
         this.$bus.$emit('itemImageLoad'); //事件总线，发射事件
+
+        // 方法一，路由跳转，区分首页和详情页的图片加载完成监听事件
+        // if(this.$route.path.indexOf('/home')) {
+        //   this.$bus.$emit('homeItemImgLoad');
+        // }else if(this.$route.path.indexOf('/detail')) {
+        //   this.$bus.$emit('detailItemImgLoad');
+        // }
       },
       //监听item的点击，跳转到详情页
       itemClick() {

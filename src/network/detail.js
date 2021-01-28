@@ -9,6 +9,13 @@ export function getDetail(iid) {
   })
 }
 
+//推荐数据，另一个接口
+export function getRecommend() {
+  return request({
+    url: '/recommend'
+  })
+}
+
 //导出类 Goods
 export class Goods {
   //构造函数

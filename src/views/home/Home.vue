@@ -45,10 +45,9 @@
   import Scroll from 'components/common/scroll/Scroll'
   import TabControl from 'components/content/tabControl/TabControl';
   import GoodsList from 'components/content/goods/GoodsList';
-  import BackTop from 'components/content/backTop/BackTop';
 
   import { getHomeMultidata,getHomeGoods } from "network/home"; //导入方法，封装的网络请求模块,url
-  import {debounce} from "common/utils";
+  import {itemListenerMixin, backTopMixin} from "common/mixin";
 
   export default { 
     name:'Home',
@@ -60,8 +59,9 @@
       Scroll,
       TabControl,
       GoodsList,
-      BackTop
+      
     },
+    mixins: [itemListenerMixin, backTopMixin],
     data(){ 
       return{
         banners: [],//b.新建变量用于保存数据
@@ -72,7 +72,6 @@
           'sell': {page: 0,list: []}
         },
         currentType: 'pop',
-        isShowBackTop: true,
         tabOffsetTop: 0,
         isTabFixed: false,
         saveY: 0, //记录Home离开时状态和位置信息
@@ -92,6 +91,8 @@
     deactivated() {
       //离开时保存位置信息
       this.saveY = this.$refs.scroll.getScrollY();
+      //取消全局事件的监听
+      this.$bus.$off('itemImageLoad',this.itemImgListener)
     },
     created(){ //发送网络请求
       this.getHomeMultidata();
@@ -103,12 +104,6 @@
       
     },
     mounted() {
-      //调用防抖函数
-      const refresh = debounce(this.$refs.scroll.refresh, 200);
-      //事件总线，监听item中图片加载完成
-      this.$bus.$on('itemImageLoad',() => {
-        refresh();
-      })
 
     },
     methods: {
@@ -135,11 +130,7 @@
         this.$refs.tabControl1.currentIndex = index; // index为最新点击 
         this.$refs.tabControl2.currentIndex = index; // index为最新点击 
       },
-      //点击按钮，回到首页
-      backClick() {
-        //调用scroll组件的scrollTo方法
-        this.$refs.scroll.scrollTo(0, 0, 500);
-      },
+      
       //监听滚动
       contentScroll(position) {
         this.isShowBackTop = (-position.y) > 1000 ; //回到首页按钮的显示与隐藏
